@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Light theme: white on dark text */
+body { @apply bg-white text-gray-900; }
+
+/* Dark theme: black on white text */
+.dark body { @apply bg-black text-white; }
