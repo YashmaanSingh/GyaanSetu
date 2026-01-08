@@ -1,5 +1,5 @@
-import express from 'express';
-import Announcement from '../models/Announcement.js';
+const express = require('express');
+const Announcement = require('../models/Announcement');
 
 const router = express.Router();
 
@@ -25,4 +25,4 @@ router.post('/', async (req, res) => {
   }
 });
 
-export default router;
+module.exports = router;
