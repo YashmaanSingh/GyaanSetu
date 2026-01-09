@@ -22,4 +22,7 @@ router.post("/submit", async (req, res) => {
   const { studentId, assignmentId, answers } = req.body;
   const assignment = await Assignment.findById(assignmentId);
   const score = assignment.questions.reduce((acc, q, i) => acc + (q.answer === answers[i] ? 1 : 0), 0);
-  res.json({ score, total: assignment.questions.len
+  res.json({ score, total: assignment.questions.length });
+});
+
+module.exports = router;

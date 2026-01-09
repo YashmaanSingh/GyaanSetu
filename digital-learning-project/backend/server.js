@@ -1,43 +1,62 @@
 // backend/server.js
+require('dotenv').config();
 const express = require("express");
 const cors = require("cors");
+const connectDB = require('./config/db');
+
+// Connect to database
+connectDB();
+
 const app = express();
-app.use(cors());
+
+// Middleware
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  credentials: true
+}));
 app.use(express.json());
 
-let assignments = [
-  {
-    id: 1,
-    title: "Math Quiz",
-    questions: [
-      { id: 1, question: "2 + 2 =", options: ["3", "4", "5"], answer: "4" },
-      { id: 2, question: "5 - 3 =", options: ["1", "2", "3"], answer: "2" },
-    ],
-  },
-];
+// Import routes
+const authRoutes = require('./routes/auth');
+const lessonRoutes = require('./routes/lessons');
+const assignmentRoutes = require('./routes/assignments');
+const attendanceRoutes = require('./routes/attendance');
+const progressRoutes = require('./routes/progress');
+const quizRoutes = require('./routes/quizzes');
+const resourceRoutes = require('./routes/resources');
+const studentRoutes = require('./routes/students');
+const userRoutes = require('./routes/users');
+const announcementRoutes = require('./routes/announcements');
 
-let submissions = {}; // {assignmentId: {userId: {answers, score}}}
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/lessons', lessonRoutes);
+app.use('/api/assignments', assignmentRoutes);
+app.use('/api/attendance', attendanceRoutes);
+app.use('/api/progress', progressRoutes);
+app.use('/api/quizzes', quizRoutes);
+app.use('/api/resources', resourceRoutes);
+app.use('/api/students', studentRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/announcements', announcementRoutes);
 
-app.get("/api/assignments/:id", (req, res) => {
-  const assignment = assignments.find((a) => a.id == req.params.id);
-  if (!assignment) return res.status(404).json({ error: "Not found" });
-  res.json(assignment);
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'OK', message: 'Backend is running' });
 });
 
-app.post("/api/assignments/:id/submit", (req, res) => {
-  const { answers, userId = "student1" } = req.body; // temp userId
-  const assignment = assignments.find((a) => a.id == req.params.id);
-  if (!assignment) return res.status(404).json({ error: "Not found" });
-
-  let score = 0;
-  assignment.questions.forEach((q) => {
-    if (answers[q.id] === q.answer) score++;
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Error:', err.message);
+  res.status(err.status || 500).json({ 
+    error: err.message || 'Internal server error' 
   });
-
-  submissions[assignment.id] = submissions[assignment.id] || {};
-  submissions[assignment.id][userId] = { answers, score };
-
-  res.json({ score });
 });
 
-app.listen(5000, () => console.log("Backend running on http://localhost:5000"));
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({ error: 'Route not found' });
+});
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Backend running on http://localhost:${PORT}`));

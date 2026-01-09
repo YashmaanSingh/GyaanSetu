@@ -16,3 +16,5 @@ router.post("/", async (req, res) => {
   await user.save();
   res.json(user);
 });
+
+module.exports = router;

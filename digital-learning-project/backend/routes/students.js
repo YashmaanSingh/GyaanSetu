@@ -1,16 +1,24 @@
-import express from 'express';
-import Student from '../models/Student.js';
+const express = require('express');
+const Student = require('../models/Student');
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-  const students = await Student.find();
-  res.json(students);
+  try {
+    const students = await Student.find();
+    res.json(students);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch students' });
+  }
 });
 
 router.post('/', async (req, res) => {
-  const student = new Student(req.body);
-  await student.save();
-  res.json(student);
+  try {
+    const student = new Student(req.body);
+    await student.save();
+    res.status(201).json(student);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to create student' });
+  }
 });
 
-export default router;
+module.exports = router;
