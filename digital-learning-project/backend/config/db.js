@@ -1,13 +1,6 @@
-const mongoose = require('mongoose');
-
 const connectDB = async () => {
-  try {
-    await mongoose.connect(process.env.MONGO_URI);
-    console.log('MongoDB connected');
-  } catch (err) {
-    console.error(err);
-    process.exit(1);
-  }
+  console.log('🚀 Using In-Memory Mock Database (No MongoDB required)');
+  console.log('📝 Data will be stored in RAM and reset on server restart');
 };
 
 module.exports = connectDB;
