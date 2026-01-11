@@ -1,18 +1,51 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+const db = require('../utils/mockMongoose');
 
-const protect = async (req,res,next) => {
+const protect = async (req, res, next) => {
   let token;
-  if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')){
-    token = req.headers.authorization.split(' ')[1];
+
+  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      req.user = await User.findById(decoded.id).select('-password');
+      token = req.headers.authorization.split(' ')[1];
+      console.log('[AuthMiddleware] Token received:', token.substring(0, 10) + '...');
+
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret');
+      console.log('[AuthMiddleware] Decoded:', decoded);
+
+      req.user = await db.User.findById(decoded.id);
+
+      if (!req.user) {
+        console.log('[AuthMiddleware] User not found for ID:', decoded.id);
+        return res.status(401).json({ msg: 'User not found' });
+      }
+
+      console.log('[AuthMiddleware] User authenticated:', req.user.email);
       next();
-    } catch(err){ res.status(401).json({msg:'Not authorized'}); }
+    } catch (err) {
+      console.error('[AuthMiddleware] Auth error:', err.message);
+      return res.status(401).json({ msg: 'Not authorized, token failed' });
+    }
   } else {
-    res.status(401).json({msg:'No token'});
+    console.log('[AuthMiddleware] No token in header:', req.headers.authorization);
+    return res.status(401).json({ msg: 'Not authorized, no token' });
   }
 };
 
-module.exports = protect;
+const authorize = (...roles) => {
+  return (req, res, next) => {
+    if (!req.user) {
+      console.log('[AuthMiddleware] Authorize check: No user');
+      return res.status(401).json({ msg: 'Not authorized' });
+    }
+
+    if (!roles.includes(req.user.role)) {
+      console.log(`[AuthMiddleware] Role mismatch. User: ${req.user.role}, Allowed: ${roles}`);
+      return res.status(403).json({ msg: `User role '${req.user.role}' is not authorized to access this route` });
+    }
+
+    console.log('[AuthMiddleware] Authorization successful');
+    next();
+  };
+};
+
+module.exports = { protect, authorize };
