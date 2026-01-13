@@ -2,7 +2,7 @@
 
 A comprehensive digital learning platform designed to bridge the rural-urban digital divide in Nabha, Punjab. This project provides offline-capable lessons, multi-language support, and role-based access for students, teachers, and administrators.
 
-## 🚨 Issues Found and Status
+ Issues Found and Status
 
 ### Critical Issues
 1. **Missing Environment Variables**: No `.env` file found in backend
@@ -10,18 +10,18 @@ A comprehensive digital learning platform designed to bridge the rural-urban dig
 3. **Inconsistent Project Structure**: Duplicate nested directories
 4. **Missing Dependencies**: Some packages may have version conflicts
 
-### Medium Priority Issues
+ Medium Priority Issues
 1. **Incomplete Backend Integration**: Frontend uses mock API instead of real backend
 2. **Missing Authentication Flow**: Backend auth routes not connected to frontend
 3. **Incomplete Error Handling**: Limited error handling in API calls
 4. **Missing Documentation**: Limited inline documentation
 
-### Low Priority Issues
+Low Priority Issues
 1. **Code Formatting**: Some inconsistent formatting
 2. **Missing Tests**: No test files found
 3. **Missing CI/CD**: No deployment configuration
 
-## 🏗️ Project Structure
+ Project Structure
 
 ```
 digital-learning-project/
@@ -85,26 +85,26 @@ digital-learning-project/
     └── package.json
 ```
 
-## 🚀 Quick Start
+ Quick Start
 
 ### Prerequisites
 - Node.js (v14 or higher)
 - MongoDB (local or cloud instance)
 - npm or yarn
 
-### Backend Setup
+Backend Setup
 
-1. **Navigate to backend directory:**
+1. Navigate to backend directory:
    ```bash
    cd backend
    ```
 
-2. **Install dependencies:**
+2. Install dependencies:
    ```bash
    npm install
    ```
 
-3. **Environment variables:**
+3. Environment variables:
    The `.env` file already exists. Review and update if needed:
    ```env
    MONGO_URI=mongodb://localhost:27017/gyaansetu
@@ -113,39 +113,39 @@ digital-learning-project/
    NODE_ENV=development
    ```
 
-4. **Start the backend server:**
+4. Start the backend server:
    ```bash
    npm start
    # or for development with auto-reload:
    npm run dev
    ```
 
-### Frontend Setup
+ Frontend Setup
 
-1. **Navigate to frontend directory:**
+1. Navigate to frontend directory:
    ```bash
    cd frontend
    ```
 
-2. **Install dependencies:**
+2. Install dependencies:
    ```bash
    npm install
    # If you encounter dependency errors, try:
    npm install --legacy-peer-deps
    ```
 
-3. **Start the development server:**
+3. Start the development server:
    ```bash
    npm start
    ```
 
-4. **Access the application:**
+4. Access the application:
    - Frontend: http://localhost:3000
    - Backend API: http://localhost:5000
 
-## 🔧 Configuration
+ Configuration
 
-### Backend Configuration
+Backend Configuration
 
 The backend requires the following environment variables:
 
@@ -156,7 +156,7 @@ PORT=5000
 NODE_ENV=development
 ```
 
-### Frontend Configuration
+Frontend Configuration
 
 The frontend uses:
 - React 18 with hooks
@@ -165,39 +165,39 @@ The frontend uses:
 - Recharts for data visualization
 - Webpack overrides for Node.js polyfills
 
-## 🎯 Features
+Features
 
-### Student Features
+Student Features
 - **Offline Learning**: Download lessons for offline access
 - **Progress Tracking**: Visual progress charts and analytics
 - **Multi-language Support**: English, Hindi, and Punjabi
 - **Assignment Submission**: Complete and submit assignments
 - **Quiz Taking**: Interactive quizzes with immediate feedback
 
-### Teacher Features
+Teacher Features
 - **Lesson Management**: Create and upload lessons
 - **Assignment Creation**: Design assignments and quizzes
 - **Attendance Tracking**: Mark and track student attendance
 - **Progress Monitoring**: View student progress and analytics
 - **Resource Management**: Upload and manage educational resources
 
-### Admin Features
+ Admin Features
 - **User Management**: Add and manage students, teachers
 - **System Administration**: Manage roles and permissions
 - **Announcement System**: Create and broadcast announcements
 - **Data Export**: Export student data and reports
 - **System Monitoring**: Monitor platform usage and performance
 
-## 🌐 Multi-language Support
+Multi-language Support
 
 The platform supports three languages:
-- **English** (en)
-- **Hindi** (हिन्दी)
-- **Punjabi** (ਪੰਜਾਬੀ)
+- English (en)
+- Hindi (हिन्दी)
+- Punjabi (ਪੰਜਾਬੀ)
 
 Language switching is available throughout the application interface.
 
-## 🎨 UI/UX Features
+ UI/UX Features
 
 - **Dark Mode**: Toggle between light and dark themes
 - **Responsive Design**: Works on desktop, tablet, and mobile
@@ -205,16 +205,16 @@ Language switching is available throughout the application interface.
 - **Accessibility**: Designed for users with varying technical skills
 - **Progressive Web App**: Can be installed on devices
 
-## 🔒 Security Features
+Security Features
 
 - **JWT Authentication**: Secure token-based authentication
 - **Role-based Access Control**: Different access levels for users
 - **Password Hashing**: Secure password storage with bcrypt
 - **CORS Protection**: Configured for secure cross-origin requests
 
-## 📊 Technology Stack
+Technology Stack
 
-### Backend
+Backend
 - **Node.js**: Runtime environment
 - **Express.js**: Web framework
 - **MongoDB**: Database
@@ -223,14 +223,14 @@ Language switching is available throughout the application interface.
 - **bcryptjs**: Password hashing
 - **CORS**: Cross-origin resource sharing
 
-### Frontend
+Frontend
 - **React 18**: UI library
 - **Tailwind CSS**: Styling framework
 - **React Router**: Navigation
 - **Recharts**: Data visualization
 - **Axios**: HTTP client (implied)
 
-## 🚨 Known Issues
+ Known Issues
 
 1. **Environment Variables**: Backend requires `.env` file setup
 2. **Database Connection**: MongoDB connection string needed
@@ -240,9 +240,9 @@ Language switching is available throughout the application interface.
 6. **Testing**: No test files present
 7. **Documentation**: Limited inline code documentation
 
-## 🔧 Troubleshooting
+Troubleshooting
 
-### Common Issues
+Common Issues
 
 1. **Dependency Installation Errors:**
    ```bash
@@ -263,15 +263,15 @@ Language switching is available throughout the application interface.
    - Backend CORS is configured for localhost:3000
    - Update CORS settings for production
 
-## 🚀 Deployment
+Deployment
 
-### Backend Deployment
+Backend Deployment
 1. Set up MongoDB database (local or cloud)
 2. Configure environment variables
 3. Deploy to cloud platform (Heroku, AWS, etc.)
 4. Set up SSL certificates
 
-### Frontend Deployment
+ Frontend Deployment
 1. Build the production bundle:
    ```bash
    npm run build
@@ -279,7 +279,7 @@ Language switching is available throughout the application interface.
 2. Deploy to static hosting (Netlify, Vercel, etc.)
 3. Configure API endpoints for production
 
-## 📝 Development Guidelines
+ Development Guidelines
 
 ### Code Style
 - Use consistent indentation (2 spaces)
@@ -287,13 +287,13 @@ Language switching is available throughout the application interface.
 - Add comments for complex logic
 - Use meaningful variable names
 
-### Git Workflow
+Git Workflow
 - Create feature branches for new features
 - Use descriptive commit messages
 - Test changes before committing
 - Keep commits atomic and focused
 
-## 🤝 Contributing
+ Contributing
 
 1. Fork the repository
 2. Create a feature branch
@@ -301,18 +301,18 @@ Language switching is available throughout the application interface.
 4. Test thoroughly
 5. Submit a pull request
 
-## 📄 License
+ License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## 📞 Support
+ Support
 
 For support and questions:
 - Create an issue in the repository
 - Contact the development team
 - Check the documentation
 
-## 🎯 Future Enhancements
+Future Enhancements
 
 - [ ] Real-time notifications
 - [ ] Video lesson support
