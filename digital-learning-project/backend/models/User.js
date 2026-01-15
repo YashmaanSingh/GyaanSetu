@@ -19,6 +19,10 @@ const userSchema = new mongoose.Schema({
     enum: ['student', 'teacher', 'admin'],
     required: true
   },
+  classId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Class'
+  },
   username: {
     type: String,
     trim: true
