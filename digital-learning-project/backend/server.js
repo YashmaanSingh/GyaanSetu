@@ -21,24 +21,18 @@ const authRoutes = require('./routes/auth');
 const lessonRoutes = require('./routes/lessons');
 const assignmentRoutes = require('./routes/assignments');
 const attendanceRoutes = require('./routes/attendance');
-const progressRoutes = require('./routes/progress');
-const quizRoutes = require('./routes/quizzes');
-const resourceRoutes = require('./routes/resources');
-const studentRoutes = require('./routes/students');
 const userRoutes = require('./routes/users');
-const announcementRoutes = require('./routes/announcements');
+const classRoutes = require('./routes/classes');
+const subjectRoutes = require('./routes/subjects');
 
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/lessons', lessonRoutes);
 app.use('/api/assignments', assignmentRoutes);
 app.use('/api/attendance', attendanceRoutes);
-app.use('/api/progress', progressRoutes);
-app.use('/api/quizzes', quizRoutes);
-app.use('/api/resources', resourceRoutes);
-app.use('/api/students', studentRoutes);
 app.use('/api/users', userRoutes);
-app.use('/api/announcements', announcementRoutes);
+app.use('/api/classes', classRoutes);
+app.use('/api/subjects', subjectRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
@@ -48,8 +42,8 @@ app.get('/api/health', (req, res) => {
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Error:', err.message);
-  res.status(err.status || 500).json({ 
-    error: err.message || 'Internal server error' 
+  res.status(err.status || 500).json({
+    error: err.message || 'Internal server error'
   });
 });
 
