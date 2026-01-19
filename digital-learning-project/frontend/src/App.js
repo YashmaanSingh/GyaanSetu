@@ -1,8 +1,10 @@
 import React, { useState, createContext, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Splash from './components/Splash';
 import Login from './components/Login';
+import SignUp from './components/SignUp';
+import ForgotPassword from './components/ForgotPassword';
 import Home from './pages/Home';
 import Student from './pages/Student';
 import Teacher from './pages/Teacher';
@@ -37,29 +39,30 @@ function App() {
     <LangContext.Provider value={{ lang, setLang }}>
       <AuthContext.Provider value={{ auth, setAuth }}>
         <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors">
-          <Router>
-            <Navbar setDark={setDark} dark={dark} />
-            <main className="p-6 max-w-6xl mx-auto">
-              <Routes>
-                <Route path="/login" element={<Login />} />
-                <Route path="/" element={<Home />} />
-                <Route path="/about" element={<About />} />
-                <Route
-                  path="/student"
-                  element={auth && auth.role === 'student' ? <Student /> : <Navigate to="/login" />}
-                />
-                <Route
-                  path="/teacher"
-                  element={auth && auth.role === 'teacher' ? <Teacher /> : <Navigate to="/login" />}
-                />
-                <Route
-                  path="/admin"
-                  element={auth && auth.role === 'admin' ? <Admin /> : <Navigate to="/login" />}
-                />
-                <Route path="*" element={<Home />} />
-              </Routes>
-            </main>
-          </Router>
+
+          <Navbar setDark={setDark} dark={dark} />
+          <main className="p-6 max-w-6xl mx-auto">
+            <Routes>
+              <Route path="/signup" element={<SignUp />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route
+                path="/student"
+                element={auth && auth.role === 'student' ? <Student /> : <Navigate to="/login" />}
+              />
+              <Route
+                path="/teacher"
+                element={auth && auth.role === 'teacher' ? <Teacher /> : <Navigate to="/login" />}
+              />
+              <Route
+                path="/admin"
+                element={auth && auth.role === 'admin' ? <Admin /> : <Navigate to="/login" />}
+              />
+              <Route path="*" element={<Home />} />
+            </Routes>
+          </main>
+
         </div>
       </AuthContext.Provider>
     </LangContext.Provider>
