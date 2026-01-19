@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { registerUser } from "../services/api";
 
 function SignUp() {
   const navigate = useNavigate();
@@ -18,22 +19,11 @@ function SignUp() {
     e.preventDefault();
 
     try {
-      // 👇 This will call your backend signup endpoint
-      const res = await fetch("http://localhost:4000/api/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      if (res.ok) {
-        alert("Signup successful! Please log in.");
-        navigate("/login");
-      } else {
-        const error = await res.json();
-        alert("Signup failed: " + error.message);
-      }
+      await registerUser(formData);
+      alert("Signup successful! Please log in.");
+      navigate("/login");
     } catch (err) {
-      alert("Error connecting to server: " + err.message);
+      alert("Signup failed: " + err.message);
     }
   };
 
@@ -107,4 +97,4 @@ function SignUp() {
   );
 }
 
-export default SignUp;
+export default SignUp;
