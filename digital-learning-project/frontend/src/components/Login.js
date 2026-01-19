@@ -1,13 +1,13 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../App';
-import { mockAuth } from '../services/api';
+import { loginUser } from '../services/api';
 
 export default function Login() {
   const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState(''); // email effectively
   const [showPw, setShowPw] = useState(false);
-  const [role, setRole] = useState('student');
+  // role is determined by backend response, not user selection during login
   const [busy, setBusy] = useState(false);
   const { setAuth } = useContext(AuthContext);
   const nav = useNavigate();
@@ -16,13 +16,19 @@ export default function Login() {
     e.preventDefault();
     if (!username.trim() || !password) return;
     setBusy(true);
-    const user = await mockAuth({ name: username, role });
-    setBusy(false);
-    setAuth(user);
-    localStorage.setItem('auth', JSON.stringify(user));
-    if (role === 'student') nav('/student');
-    else if (role === 'teacher') nav('/teacher');
-    else nav('/admin');
+    try {
+      // Use real login API
+      const user = await loginUser(username, password); // Note: API expects email, but variable is username. Assuming user enters email.
+      setAuth(user);
+      if (user.role === 'student') nav('/student');
+      else if (user.role === 'teacher') nav('/teacher');
+      else if (user.role === 'admin') nav('/admin');
+      else nav('/');
+    } catch (err) {
+      alert('Login failed: ' + err.message);
+    } finally {
+      setBusy(false);
+    }
   };
 
   return (
@@ -30,15 +36,16 @@ export default function Login() {
       <h2 className="text-xl font-semibold mb-3">Login</h2>
       <form onSubmit={submit} className="space-y-4">
 
-        {/* 1) Username */}
+        {/* 1) Email */}
         <div>
-          <label className="block text-sm mb-1">Username</label>
+          <label className="block text-sm mb-1">Email</label>
           <input
+            type="email"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            placeholder="Username"
+            placeholder="Enter your email"
             className="w-full border dark:border-gray-700 px-3 py-2 rounded bg-white dark:bg-gray-900"
-            autoComplete="username"
+            autoComplete="email"
             required
           />
         </div>
@@ -67,19 +74,7 @@ export default function Login() {
           </div>
         </div>
 
-        {/* 3) Role */}
-        <div>
-          <label className="block text-sm mb-1">Role</label>
-          <select
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-            className="w-full border dark:border-gray-700 px-3 py-2 rounded bg-white dark:bg-gray-900"
-          >
-            <option value="student">Student</option>
-            <option value="teacher">Teacher</option>
-            <option value="admin">Admin</option>
-          </select>
-        </div>
+
 
         {/* Submit */}
         <button
@@ -87,9 +82,26 @@ export default function Login() {
           disabled={busy}
           className="w-full bg-blue-600 text-white px-3 py-2 rounded disabled:opacity-60"
         >
-          {busy ? 'Signing in...' : `Login as ${role}`}
+          {busy ? 'Signing in...' : 'Login'}
         </button>
       </form>
+      <p className="text-sm text-center mt-4 text-gray-600">
+        <span
+          className="text-blue-600 cursor-pointer hover:underline"
+          onClick={() => nav('/forgot-password')}
+        >
+          Forgot Password?
+        </span>
+      </p>
+      <p className="text-sm text-center mt-2 text-gray-600">
+        Don't have an account?{' '}
+        <span
+          className="text-blue-600 cursor-pointer hover:underline"
+          onClick={() => nav('/signup')}
+        >
+          Sign Up
+        </span>
+      </p>
     </div>
   );
 }
