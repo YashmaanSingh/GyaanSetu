@@ -6,6 +6,7 @@ async function apiCall(endpoint, options = {}) {
   const config = {
     headers: {
       'Content-Type': 'application/json',
+      ...(localStorage.getItem('token') ? { Authorization: `Bearer ${localStorage.getItem('token')}` } : {}),
       ...options.headers,
     },
     ...options,
@@ -16,7 +17,7 @@ async function apiCall(endpoint, options = {}) {
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.message || 'API call failed');
+      throw new Error(data.message || data.msg || 'API call failed');
     }
 
     return data;
@@ -28,31 +29,77 @@ async function apiCall(endpoint, options = {}) {
 
 // Authentication functions
 export async function loginUser(email, password) {
-  return apiCall('/auth/login', {
+  const data = await apiCall('/auth/login', {
     method: 'POST',
     body: JSON.stringify({ email, password }),
   });
+  // Backend returns { token, user: { id, name, role } }
+  if (data.token) {
+    localStorage.setItem('token', data.token);
+  }
+  return data.user;
 }
 
 export async function registerUser(userData) {
-  return apiCall('/auth/register', {
+  const data = await apiCall('/auth/register', {
     method: 'POST',
     body: JSON.stringify(userData),
+  });
+  if (data.token) {
+    localStorage.setItem('token', data.token);
+  }
+  return data.user;
+}
+
+export async function resetPassword(email, newPassword) {
+  const data = await apiCall('/auth/reset-password', {
+    method: 'POST',
+    body: JSON.stringify({ email, newPassword }),
+  });
+  return data;
+}
+
+// Class functions
+export async function fetchClasses() {
+  return apiCall('/classes');
+}
+
+export async function createClass(classData) {
+  return apiCall('/classes', {
+    method: 'POST',
+    body: JSON.stringify(classData),
+  });
+}
+
+export async function deleteClass(id) {
+  return apiCall(`/classes/${id}`, {
+    method: 'DELETE',
+  });
+}
+
+// Subject functions
+export async function fetchSubjects(classId) {
+  const query = classId ? `?classId=${classId}` : '';
+  return apiCall(`/subjects${query}`);
+}
+
+export async function createSubject(subjectData) {
+  return apiCall('/subjects', {
+    method: 'POST',
+    body: JSON.stringify(subjectData),
+  });
+}
+
+export async function deleteSubject(id) {
+  return apiCall(`/subjects/${id}`, {
+    method: 'DELETE',
   });
 }
 
 // Lesson functions
-export async function fetchLessons() {
-  try {
-    return await apiCall('/lessons');
-  } catch (error) {
-    // Fallback to mock data if API fails
-    return [
-      { id: 1, title: 'Intro to Computers', minutes: 15 },
-      { id: 2, title: 'Internet Safety', minutes: 10 },
-      { id: 3, title: 'Create Document', minutes: 12 },
-    ];
-  }
+export async function fetchLessons(subjectId) {
+  const query = subjectId ? `?subjectId=${subjectId}` : '';
+  return apiCall(`/lessons${query}`);
 }
 
 export async function createLesson(lessonData) {
@@ -63,8 +110,9 @@ export async function createLesson(lessonData) {
 }
 
 // Assignment functions
-export async function fetchAssignments() {
-  return apiCall('/assignments');
+export async function fetchAssignments(subjectId) {
+  const query = subjectId ? `?subjectId=${subjectId}` : '';
+  return apiCall(`/assignments${query}`);
 }
 
 export async function createAssignment(assignmentData) {
@@ -75,9 +123,24 @@ export async function createAssignment(assignmentData) {
 }
 
 export async function submitAssignment(assignmentId, answers, studentId) {
-  return apiCall('/assignments/submit', {
+  return apiCall(`/assignments/${assignmentId}/submit`, {
     method: 'POST',
-    body: JSON.stringify({ assignmentId, answers, studentId }),
+    body: JSON.stringify({ content: answers, studentId }),
+  });
+}
+
+export async function getMySubmission(assignmentId) {
+  return apiCall(`/assignments/${assignmentId}/submission`);
+}
+
+export async function getAssignmentSubmissions(assignmentId) {
+  return apiCall(`/assignments/${assignmentId}/submissions`);
+}
+
+export async function gradeSubmission(submissionId, grade, feedback) {
+  return apiCall(`/assignments/submissions/${submissionId}/grade`, {
+    method: 'PUT',
+    body: JSON.stringify({ grade, feedback }),
   });
 }
 
@@ -98,11 +161,27 @@ export async function fetchStudents() {
   return apiCall('/students');
 }
 
+export async function fetchStudentsByClass(classId) {
+  return apiCall(`/users/students/${classId}`);
+}
+
 export async function createStudent(studentData) {
   return apiCall('/students', {
     method: 'POST',
     body: JSON.stringify(studentData),
   });
+}
+
+export async function fetchStats() {
+  return apiCall('/users/stats');
+}
+
+export async function updateUserProfile(data) {
+  const res = await apiCall('/users/profile', {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  });
+  return res.user;
 }
 
 // Resource functions
