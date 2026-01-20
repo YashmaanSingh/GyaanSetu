@@ -1,98 +1,152 @@
 import React, { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { LangContext } from '../App';
 import { STR } from '../utils/languageData';
 
 export default function Home() {
+  const navigate = useNavigate();
   const { lang } = useContext(LangContext);
   const t = STR[lang];
 
   return (
-    <main className="min-h-[calc(100vh-56px)] relative overflow-hidden">
-
-      {/* Soft gradient background */}
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-sky-50 via-white to-indigo-50 dark:from-[#0b1220] dark:via-[#0b1220] dark:to-[#0b1220]" />
-
-      {/* Decorative gradient blobs */}
-      <div className="pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full bg-[radial-gradient(circle_at_center,rgba(56,189,248,0.35),transparent_60%)] blur-2xl dark:opacity-40" />
-      <div className="pointer-events-none absolute -bottom-24 -right-24 h-80 w-80 rounded-full bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.35),transparent_60%)] blur-2xl dark:opacity-40" />
-
-      {/* Hero section */}
-      <section className="max-w-6xl mx-auto px-4 pt-10 pb-6">
-        <div className="grid lg:grid-cols-12 gap-8 items-center">
-          <div className="lg:col-span-7">
-            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900 dark:text-white">
-              {t.appTitle}
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+      {/* Hero Section */}
+      <section className="container mx-auto px-4 py-16 md:py-24">
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div>
+            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+              {lang === 'hi' ? 'शिक्षा, समुदाय, भविष्य' : lang === 'pa' ? 'ਸਿੱਖਿਆ, ਭਾਈਚਾਰਾ, ਭਵਿੱਖ' : 'Education, Community, Future'}
+              <br />
+              <span className="text-blue-600">{t.appTitle}</span>
             </h1>
-            <p className="mt-3 text-gray-700 dark:text-gray-300 max-w-2xl">
-              {t.welcome}
+            <p className="text-xl text-gray-700 mb-8">
+              {lang === 'hi'
+                ? 'ग्रामीण छात्रों को गुणवत्तापूर्ण शिक्षा से जोड़ना। किसी भी समय, कहीं भी, इंटरनेट के साथ या बिना सीखें।'
+                : lang === 'pa'
+                  ? 'ਪਿੰਡਾਂ ਦੇ ਵਿਦਿਆਰਥੀਆਂ ਨੂੰ ਗੁਣਵੱਤਾ ਸਿੱਖਿਆ ਨਾਲ ਜੋੜਨਾ। ਕਿਸੇ ਵੀ ਸਮੇਂ, ਕਿਤੇ ਵੀ, ਇੰਟਰਨੈਟ ਦੇ ਨਾਲ ਜਾਂ ਬਿਨਾਂ ਸਿੱਖੋ।'
+                  : 'Connecting rural students with quality education. Learn anytime, anywhere, with or without internet.'}
             </p>
-
-            <div className="mt-6 flex gap-3">
-              <a
-                href="/student"
-                className="inline-flex items-center px-5 py-3 rounded-lg bg-indigo-600 text-white shadow hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-300 dark:focus:ring-indigo-900"
+            <div className="flex gap-4">
+              <button
+                onClick={() => navigate('/signup')}
+                className="px-8 py-4 bg-blue-600 text-white text-lg font-semibold rounded-lg hover:bg-blue-700 shadow-lg transform hover:scale-105 transition"
               >
-                Start Learning
-              </a>
-              <a
-                href="/about"
-                className="inline-flex items-center px-5 py-3 rounded-lg border border-gray-300 text-gray-900 hover:bg-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-800"
+                {lang === 'hi' ? '📚 सीखना शुरू करें' : lang === 'pa' ? '📚 ਸਿੱਖਣਾ ਸ਼ੁਰੂ ਕਰੋ' : '📚 Start Learning'}
+              </button>
+              <button
+                onClick={() => navigate('/about')}
+                className="px-8 py-4 bg-white text-blue-600 text-lg font-semibold rounded-lg hover:bg-gray-50 border-2 border-blue-600 transition"
               >
-                Learn More
-              </a>
+                {lang === 'hi' ? 'और जानें' : lang === 'pa' ? 'ਹੋਰ ਜਾਣੋ' : 'Learn More'}
+              </button>
             </div>
           </div>
-
-          {/* Illustration placeholder (can swap with an image later) */}
-          <div className="lg:col-span-5 hidden lg:block">
-            <div className="relative h-64">
-              <div className="absolute inset-0 rounded-2xl bg-white/70 backdrop-blur-md ring-1 ring-black/10 dark:bg-white/10 dark:ring-white/10" />
-              <div className="absolute inset-4 rounded-xl grid place-items-center text-gray-600 dark:text-gray-300">
-                <span className="text-sm">Add an illustration or stats here</span>
-              </div>
-            </div>
+          <div className="flex justify-center">
+            <img
+              src="/hero.png"
+              alt="Rural Education"
+              className="rounded-3xl shadow-2xl w-full max-w-md"
+            />
           </div>
         </div>
       </section>
 
-      {/* Study-friendly cards (glassmorphism) */}
-      <section className="max-w-6xl mx-auto px-4 pb-10">
-        <div className="grid md:grid-cols-2 gap-6">
-          <div className="p-5 rounded-2xl bg-white/80 backdrop-blur-md ring-1 ring-black/10 shadow-sm dark:bg-white/10 dark:ring-white/10">
-            <h3 className="font-semibold mb-2 text-gray-900 dark:text-white">{t.home_problem}</h3>
-            <p className="text-sm text-gray-700 dark:text-gray-300">
-              {t.home_ps_text}
+      {/* Features Section */}
+      <section className="container mx-auto px-4 py-16 bg-white rounded-3xl shadow-xl my-12">
+        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-gray-900">
+          {lang === 'hi' ? 'प्लेटफ़ॉर्म विशेषताएं' : lang === 'pa' ? 'ਪਲੇਟਫਾਰਮ ਵਿਸ਼ੇਸ਼ਤਾਵਾਂ' : 'Platform Features'}
+        </h2>
+        <div className="grid md:grid-cols-3 gap-8">
+          {/* Feature 1 */}
+          <div className="text-center p-6 rounded-xl hover:bg-blue-50 transition">
+            <div className="w-32 h-32 mx-auto mb-4">
+              <img src="/icon-study.png" alt="Study Materials" className="w-full h-full" />
+            </div>
+            <h3 className="text-2xl font-bold mb-3 text-gray-900">
+              {lang === 'hi' ? 'समृद्ध अध्ययन सामग्री' : lang === 'pa' ? 'ਅਮੀਰ ਅਧਿਐਨ ਸਮੱਗਰੀ' : 'Rich Study Materials'}
+            </h3>
+            <p className="text-gray-600">
+              {lang === 'hi'
+                ? 'PDFs, वीडियो, चित्र और ऑडियो पाठों तक पहुंचें। ऑफ़लाइन अध्ययन के लिए डाउनलोड करें।'
+                : lang === 'pa'
+                  ? 'PDFs, ਵੀਡੀਓਜ਼, ਤਸਵੀਰਾਂ ਅਤੇ ਆਡੀਓ ਪਾਠਾਂ ਤੱਕ ਪਹੁੰਚ ਕਰੋ। ਆਫਲਾਈਨ ਅਧਿਐਨ ਲਈ ਡਾਊਨਲੋਡ ਕਰੋ।'
+                  : 'Access PDFs, videos, images, and audio lessons. Download for offline study.'}
             </p>
           </div>
 
-          <div className="p-5 rounded-2xl bg-white/80 backdrop-blur-md ring-1 ring-black/10 shadow-sm dark:bg-white/10 dark:ring-white/10">
-            <h3 className="font-semibold mb-2 text-gray-900 dark:text-white">{t.home_expected}</h3>
-            <ul className="list-disc pl-5 text-sm space-y-1 text-gray-700 dark:text-gray-300">
-              <li>{t.home_point_offline}</li>
-              <li>{t.home_point_locale}</li>
-              <li>{t.home_point_dash}</li>
-            </ul>
+          {/* Feature 2 */}
+          <div className="text-center p-6 rounded-xl hover:bg-purple-50 transition">
+            <div className="w-32 h-32 mx-auto mb-4">
+              <img src="/icon-assignment.png" alt="Assignments" className="w-full h-full" />
+            </div>
+            <h3 className="text-2xl font-bold mb-3 text-gray-900">
+              {lang === 'hi' ? 'इंटरैक्टिव असाइनमेंट' : lang === 'pa' ? 'ਇੰਟਰਐਕਟਿਵ ਅਸਾਈਨਮੈਂਟਸ' : 'Interactive Assignments'}
+            </h3>
+            <p className="text-gray-600">
+              {lang === 'hi'
+                ? 'ऑनलाइन होमवर्क जमा करें, तुरंत फीडबैक प्राप्त करें, अपनी प्रगति ट्रैक करें।'
+                : lang === 'pa'
+                  ? 'ਆਨਲਾਈਨ ਹੋਮਵਰਕ ਜਮ੍ਹਾਂ ਕਰੋ, ਤੁਰੰਤ ਫੀਡਬੈਕ ਪ੍ਰਾਪਤ ਕਰੋ, ਆਪਣੀ ਤਰੱਕੀ ਟਰੈਕ ਕਰੋ।'
+                  : 'Submit homework online, get instant feedback, track your progress.'}
+            </p>
+          </div>
+
+          {/* Feature 3 */}
+          <div className="text-center p-6 rounded-xl hover:bg-green-50 transition">
+            <div className="w-32 h-32 mx-auto mb-4">
+              <img src="/icon-attendance.png" alt="Attendance" className="w-full h-full" />
+            </div>
+            <h3 className="text-2xl font-bold mb-3 text-gray-900">
+              {lang === 'hi' ? 'प्रगति ट्रैक करें' : lang === 'pa' ? 'ਤਰੱਕੀ ਟਰੈਕ ਕਰੋ' : 'Track Progress'}
+            </h3>
+            <p className="text-gray-600">
+              {lang === 'hi'
+                ? 'उपस्थिति की निगरानी करें, ग्रेड देखें, और अपनी सीखने की यात्रा देखें।'
+                : lang === 'pa'
+                  ? 'ਹਾਜ਼ਰੀ ਦੀ ਨਿਗਰਾਨੀ ਕਰੋ, ਗ੍ਰੇਡ ਦੇਖੋ, ਅਤੇ ਆਪਣੀ ਸਿੱਖਣ ਦੀ ਯਾਤਰਾ ਦੇਖੋ।'
+                  : 'Monitor attendance, view grades, and see your learning journey.'}
+            </p>
           </div>
         </div>
       </section>
 
-      {/* Quick links row */}
-      <section className="max-w-6xl mx-auto px-4 pb-16">
-        <div className="grid sm:grid-cols-3 gap-4">
-          <a href="/student" className="group p-4 rounded-xl bg-white/80 backdrop-blur-md ring-1 ring-black/10 hover:ring-indigo-300 hover:shadow-md transition dark:bg-white/10 dark:ring-white/10 dark:hover:ring-indigo-400">
-            <div className="font-semibold text-gray-900 dark:text-white">Student Area</div>
-            <p className="text-sm text-gray-600 dark:text-gray-300">Lessons, downloads, and progress</p>
-          </a>
-          <a href="/teacher" className="group p-4 rounded-xl bg-white/80 backdrop-blur-md ring-1 ring-black/10 hover:ring-indigo-300 hover:shadow-md transition dark:bg-white/10 dark:ring-white/10 dark:hover:ring-indigo-400">
-            <div className="font-semibold text-gray-900 dark:text-white">Teacher Tools</div>
-            <p className="text-sm text-gray-600 dark:text-gray-300">Attendance, assignments, resources</p>
-          </a>
-          <a href="/admin" className="group p-4 rounded-xl bg-white/80 backdrop-blur-md ring-1 ring-black/10 hover:ring-indigo-300 hover:shadow-md transition dark:bg-white/10 dark:ring-white/10 dark:hover:ring-indigo-400">
-            <div className="font-semibold text-gray-900 dark:text-white">Admin Panel</div>
-            <p className="text-sm text-gray-600 dark:text-gray-300">Students, announcements, oversight</p>
-          </a>
+      {/* Call to Action */}
+      <section className="container mx-auto px-4 py-16 text-center">
+        <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl p-12 text-white shadow-2xl">
+          <h2 className="text-3xl md:text-5xl font-bold mb-6">
+            {lang === 'hi'
+              ? 'अपनी सीखने की यात्रा शुरू करने के लिए तैयार हैं?'
+              : lang === 'pa'
+                ? 'ਆਪਣੀ ਸਿੱਖਣ ਦੀ ਯਾਤਰਾ ਸ਼ੁਰੂ ਕਰਨ ਲਈ ਤਿਆਰ ਹੋ?'
+                : 'Ready to Start Your Learning Journey?'}
+          </h2>
+          <p className="text-xl mb-8 opacity-90">
+            {lang === 'hi'
+              ? 'GyaanSetu के साथ सीखने वाले हजारों छात्रों से जुड़ें'
+              : lang === 'pa'
+                ? 'GyaanSetu ਨਾਲ ਸਿੱਖਣ ਵਾਲੇ ਹਜ਼ਾਰਾਂ ਵਿਦਿਆਰਥੀਆਂ ਨਾਲ ਜੁੜੋ'
+                : 'Join thousands of students learning with GyaanSetu'}
+          </p>
+          <button
+            onClick={() => navigate('/signup')}
+            className="px-10 py-4 bg-white text-blue-600 text-xl font-bold rounded-lg hover:bg-gray-100 shadow-lg transform hover:scale-105 transition"
+          >
+            {lang === 'hi' ? '🎓 अभी साइन अप करें - यह मुफ़्त है!' : lang === 'pa' ? '🎓 ਹੁਣੇ ਸਾਈਨ ਅੱਪ ਕਰੋ - ਇਹ ਮੁਫਤ ਹੈ!' : '🎓 Sign Up Now - It\'s Free!'}
+          </button>
         </div>
       </section>
-    </main>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-8 mt-16">
+        <div className="container mx-auto px-4 text-center">
+          <p className="text-lg">
+            <span className="font-bold text-blue-400">{t.appTitle}</span> - {lang === 'hi' ? 'भारत के ग्रामीण क्षेत्रों में शिक्षा की खाई को पाटना' : lang === 'pa' ? 'ਭਾਰਤ ਦੇ ਪਿੰਡਾਂ ਵਿੱਚ ਸਿੱਖਿਆ ਦੀ ਖਾਈ ਨੂੰ ਪੂਰਾ ਕਰਨਾ' : 'Bridging the Education Gap in Rural India'}
+          </p>
+          <p className="text-gray-400 mt-2">
+            © 2026 GyaanSetu. {lang === 'hi' ? 'सभी के लिए शिक्षा को सशक्त बनाना।' : lang === 'pa' ? 'ਸਭ ਲਈ ਸਿੱਖਿਆ ਨੂੰ ਸ਼ਕਤੀਸ਼ਾਲੀ ਬਣਾਉਣਾ।' : 'Empowering Education for All.'}
+          </p>
+        </div>
+      </footer>
+    </div>
   );
 }
