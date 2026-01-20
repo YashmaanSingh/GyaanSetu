@@ -1,53 +1,114 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import { LangContext } from '../App';
-import { fetchLessons } from '../services/api';
+import React, { useState, useEffect, useContext } from 'react';
+import { fetchClasses, fetchSubjects, updateUserProfile } from '../services/api';
+import StudentSubjectView from '../components/student/StudentSubjectView';
+import { AuthContext } from '../App';
 
-export default function Student(){
-  const { lang } = useContext(LangContext);
-  const [lessons, setLessons] = useState([]);
-  const [downloads, setDownloads] = useState(()=> JSON.parse(localStorage.getItem('downloads')||'[]'));
-  const [progress, setProgress] = useState(()=> Number(localStorage.getItem('progress')||20));
+export default function Student() {
+  const { auth, setAuth } = useContext(AuthContext);
+  const [classes, setClasses] = useState([]);
+  const [selectedClassId, setSelectedClassId] = useState(auth.classId || ''); // Initialize with user's class if exists
+  const [subjects, setSubjects] = useState([]);
+  const [viewingSubject, setViewingSubject] = useState(null);
 
-  useEffect(()=>{ fetchLessons().then(setLessons); },[]);
-  useEffect(()=> localStorage.setItem('downloads', JSON.stringify(downloads)), [downloads]);
-  useEffect(()=> localStorage.setItem('progress', progress), [progress]);
+  useEffect(() => {
+    loadClasses();
+  }, []);
 
-  const download = (id)=> setDownloads(d=> d.includes(id)? d: [...d, id]);
-  const start = ()=> setProgress(p=> Math.min(100, p+10));
+  useEffect(() => {
+    if (selectedClassId) {
+      loadSubjects(selectedClassId);
+      // Persist selection if different from current
+      if (selectedClassId !== auth.classId) {
+        updateProfile(selectedClassId);
+      }
+    } else {
+      setSubjects([]);
+    }
+  }, [selectedClassId]);
 
-  const data = [{name:'Completed', value: progress}, {name:'Remaining', value: 100-progress}];
+  const updateProfile = async (classId) => {
+    try {
+      const updatedUser = await updateUserProfile({ classId });
+      setAuth(updatedUser);
+      localStorage.setItem('auth', JSON.stringify(updatedUser));
+    } catch (err) {
+      console.error('Failed to update profile', err);
+    }
+  };
+
+  const loadClasses = async () => {
+    try {
+      const data = await fetchClasses();
+      setClasses(data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const loadSubjects = async (classId) => {
+    try {
+      const data = await fetchSubjects(classId);
+      setSubjects(data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  if (viewingSubject) {
+    return (
+      <div className="min-h-screen pb-10">
+        <StudentSubjectView subject={viewingSubject} onBack={() => setViewingSubject(null)} />
+      </div>
+    );
+  }
 
   return (
-    <section>
-      <h2 className="text-2xl font-bold mb-4">Student Dashboard</h2>
-      <div className="grid md:grid-cols-3 gap-4">
-        {lessons.map(l=> (
-          <div key={l.id} className="p-4 bg-white rounded shadow dark:bg-gray-800">
-            <h3 className="font-semibold">{l.title}</h3>
-            <p className="text-sm">{l.minutes} minutes</p>
-            <div className="mt-2 flex gap-2">
-              <button onClick={()=>download(l.id)} className="px-3 py-1 bg-blue-500 text-white rounded">Download</button>
-              <button onClick={start} className="px-3 py-1 bg-green-500 text-white rounded">Start</button>
-            </div>
-            <div className="mt-2 text-sm">Status: {downloads.includes(l.id)? 'Offline':'Online'}</div>
-          </div>
-        ))}
+    <div className="min-h-screen pb-10">
+      <h2 className="text-2xl font-bold mb-6">Student Dashboard</h2>
+
+      {/* Class Selection (since we don't have assignment yet) */}
+      <div className="bg-white p-6 rounded shadow dark:bg-gray-800 mb-6">
+        <label className="block text-sm mb-2 font-medium">Select Your Class</label>
+        <select
+          value={selectedClassId}
+          onChange={(e) => setSelectedClassId(e.target.value)}
+          className="w-full md:w-1/3 border px-3 py-2 rounded dark:bg-gray-700 dark:border-gray-600"
+        >
+          <option value="">-- Select Class --</option>
+          {classes.map(cls => (
+            <option key={cls._id} value={cls._id}>
+              {cls.name} {cls.section ? `(${cls.section})` : ''}
+            </option>
+          ))}
+        </select>
       </div>
 
-      <div className="mt-6 p-4 bg-white rounded shadow dark:bg-gray-800">
-        <h3 className="font-semibold mb-2">My Progress</h3>
-        <div style={{width:'100%', height:250}}>
-          <ResponsiveContainer width="100%" height={250}>
-            <BarChart data={data}>
-              <XAxis dataKey="name"/>
-              <YAxis domain={[0,100]}/>
-              <Tooltip/>
-              <Bar dataKey="value" fill="#8884d8"/>
-            </BarChart>
-          </ResponsiveContainer>
+      {/* Subject Grid */}
+      {selectedClassId && (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {subjects.map(sub => (
+            <div
+              key={sub._id}
+              onClick={() => setViewingSubject(sub)}
+              className="bg-white p-6 rounded shadow cursor-pointer hover:shadow-lg transition dark:bg-gray-800 border-l-4 border-blue-500"
+            >
+              <h3 className="font-bold text-lg mb-1">{sub.name}</h3>
+              <p className="text-gray-500 text-sm">Teacher: {sub.teacherId?.name || 'N/A'}</p>
+            </div>
+          ))}
+          {subjects.length === 0 && (
+            <div className="col-span-4 text-center text-gray-500 py-10">
+              No subjects found for this class.
+            </div>
+          )}
         </div>
-      </div>
-    </section>
+      )}
+
+      {!selectedClassId && (
+        <div className="text-center text-gray-500 py-10">
+          Please select a class to view subjects.
+        </div>
+      )}
+    </div>
   );
 }
